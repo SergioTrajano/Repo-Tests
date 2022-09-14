@@ -2,6 +2,10 @@ function unathorized() {
     return { code: 401, message: "Invalid credentials." };
 }
 
+function notFound(entity: string) {
+    return { code: 404, message: `${entity} not found.`}
+}
+
 function conflict() {
     return { code: 409, message: `Email already in use.` };
 }
@@ -12,6 +16,7 @@ function unprocessableEntityError(error: {details: {message: String}[]}) {
 
 export const errorType = {
     unathorized,
+    notFound,
     conflict,
     unprocessableEntityError,
 }

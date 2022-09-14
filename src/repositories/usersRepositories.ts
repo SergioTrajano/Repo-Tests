@@ -15,6 +15,12 @@ async function findByEmail(email: string) {
     return dbUser || voidUser;
 }
 
+async function findById(id: number) {
+    const dbUser = await client.user.findFirst({ where: { id } });
+
+    return dbUser || voidUser;
+}
+
 async function create(newUserData: IUser) {
     await client.user.create({ data: newUserData });
 }
@@ -22,4 +28,5 @@ async function create(newUserData: IUser) {
 export const userRepository = {
     create,
     findByEmail,
+    findById,
 }
