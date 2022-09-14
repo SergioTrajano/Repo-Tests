@@ -19,7 +19,7 @@ async function signUp(newUserData: IUser) {
 async function signIn(userData: IUser) {
     const dbUser = await userRepository.findByEmail(userData.email);
 
-    if (!dbUser || await comparePassword(userData.password, dbUser.password)) {
+    if (!dbUser || !comparePassword(userData.password, dbUser.password)) {
         throw errorType.unathorized();
     } 
 
