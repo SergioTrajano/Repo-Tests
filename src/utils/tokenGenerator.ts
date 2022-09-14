@@ -1,4 +1,5 @@
-import jwt from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
+import { errorType } from "./errorTypes";
 
 const JWT_SECRETE: string = String(process.env.JWT_SECRET);
 
@@ -7,5 +8,10 @@ export function generateToken(id: string) {
 }
 
 export function verifyToken(token: string) {
-    return jwt.verify(token, JWT_SECRETE);
+    try {
+        return jwt.verify(token, JWT_SECRETE) as { id: number};
+
+    } catch {
+        throw errorType.unathorized("token");
+    }
 }

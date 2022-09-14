@@ -21,13 +21,18 @@ async function signIn(userData: IUser) {
     const dbUser: User = await userRepository.findByEmail(userData.email);
 
     if (!dbUser || !comparePassword(userData.password, dbUser.password)) {
-        throw errorType.unathorized();
+        throw errorType.unathorized("credentials");
     } 
 
     return generateToken(String(dbUser.id));
 }
 
+async function findById(id: number) {
+    return await userRepository.findById(id);
+}
+
 export const usersService = {
     signUp,
     signIn,
+    findById,
 }

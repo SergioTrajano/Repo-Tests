@@ -1,5 +1,5 @@
-function unathorized() {
-    return { code: 401, message: "Invalid credentials." };
+function unathorized(entity: string) {
+    return { code: 401, message: `Invalid ${entity}.` };
 }
 
 function notFound(entity: string) {
