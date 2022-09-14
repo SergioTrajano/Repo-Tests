@@ -3,10 +3,16 @@ import { User} from "@prisma/client";
 
 export type IUser = Omit<User, "id">;
 
-function findByEmail(email: string) {
-    const dbUser = client.user.findFirst({ where: { email } });
+const voidUser: User = {
+    id: 0,
+    email: "",
+    password: "",
+};
 
-    return dbUser;
+async function findByEmail(email: string) {
+    const dbUser = await client.user.findFirst({ where: { email } });
+
+    return dbUser || voidUser;
 }
 
 async function create(newUserData: IUser) {
