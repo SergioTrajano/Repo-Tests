@@ -10,7 +10,10 @@ async function signUp(newUserData: IUser) {
         throw errorType.conflict();
     }
 
-    await userRepository.create(newUserData);
+    await userRepository.create({
+        ...newUserData,
+        password: await encryptPassword(newUserData.password)
+    });
 }
 
 async function signIn(userData: IUser) {
