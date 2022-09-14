@@ -12,8 +12,4 @@ server.use(json());
 server.use(routes);
 server.use(errorHandler);
 
-const PORT: number = Number(process.env.PORT) || 4000;
-
-server.listen(PORT, () => {
-    console.log(`Server on ${PORT} PORT!`);
-})
+export default server;
