@@ -12,6 +12,15 @@ async function signUp(req: Request, res: Response) {
     res.sendStatus(201);
 }
 
+async function signIn(req: Request, res: Response) {
+    const userData: IUser = req.body;
+
+    const token: string = await usersService.signIn(userData);
+
+    res.status(200).send({ token });
+}
+
 export const userController = {
     signUp,
+    signIn,
 }

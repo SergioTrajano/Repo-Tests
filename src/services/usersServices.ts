@@ -1,5 +1,7 @@
 import { userRepository, IUser } from "../repositories/usersRepositories";
-import { errorType } from "../utils/errorTypes"
+import { errorType } from "../utils/errorTypes";
+import { comparePassword, encryptPassword } from "../utils/passwordEncrypter";
+import { generateToken } from "../utils/tokenGenerator";
 
 async function signUp(newUserData: IUser) {
     const dbUser = await userRepository.findByEmail(newUserData.email);
@@ -8,9 +10,23 @@ async function signUp(newUserData: IUser) {
         throw errorType.conflict();
     }
 
-    await userRepository.create(newUserData);
+    await userRepository.create({
+        ...newUserData,
+        password: await encryptPassword(newUserData.password)
+    });
+}
+
+async function signIn(userData: IUser) {
+    const dbUser = await userRepository.findByEmail(userData.email);
+
+    if (!dbUser || !comparePassword(userData.password, dbUser.password)) {
+        throw errorType.unathorized();
+    } 
+
+    return generateToken(String(dbUser.id));
 }
 
 export const usersService = {
     signUp,
+    signIn,
 }
