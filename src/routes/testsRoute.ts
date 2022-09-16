@@ -10,5 +10,6 @@ const router = Router();
 router.use(validateHeader);
 router.post("/tests", validateSchema(createTestSchema), testController.create);
 router.get("/tests/terms", testController.getAllOrderBYTerms);
+router.get("/tests/teachers", testController.getAllOrderByTeachers);
 
 export default router;

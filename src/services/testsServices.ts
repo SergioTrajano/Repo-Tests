@@ -30,6 +30,27 @@ interface ICategory  {categoryName : string, tests: {
     teacher: string,
 }[]}
 
+interface ITeacher {
+    name: string,
+    categoriesData: {
+        name: string,
+        tests: {
+            name: string,
+            pdfUrl: string,
+            discipline: string,
+        }[]
+    }[]
+}[]
+
+interface TCategory {
+    name: string,
+        tests: {
+            name: string,
+            pdfUrl: string,
+            discipline: string,
+        }[]
+}
+
 async function getAllOrderByTerms() {
     const dbTerms = await termsRepository.find();
     const dbDisciplines = await disciplineRespository.find();
@@ -90,7 +111,55 @@ async function getAllOrderByTerms() {
     return testsFormtatedByTerm;
 }
 
+async function getAllOrderByTeachers() {
+    const dbDisciplines = await disciplineRespository.find();
+    const dbTeacherDiscipline = await teacherDisciplineRepository.find();
+    const dbCategory = await categoryRepository.find();
+    const dbTeachers = await teacherRepository.find();
+    const dbTests = await testsRepository.find();
+
+    let formatedTeachersData: ITeacher[] = [];
+
+    for (let teacher of dbTeachers) {
+        const teacherData: ITeacher = {
+            name: teacher.name,
+            categoriesData: []
+        };
+
+        const teacherDisciplines = dbTeacherDiscipline.filter(t => t.teacherId === teacher.id);
+
+        const teacherTests = dbTests.filter(t => teacherDisciplines.some(c => t.teacherDisciplineId === c.id));
+        
+        const teacherCategories = dbCategory.filter(t => teacherTests.some(c => c.categoryId === t.id));
+
+        for (let category of teacherCategories) {
+            const categoryData: TCategory = {
+                name: category.name,
+                tests: [],
+            }
+
+            for (let test of teacherTests) {
+                if (test.categoryId !== category.id) continue;
+                const testData = {
+                    name: test.name,
+                    pdfUrl: test.pdfUrl,
+                    discipline: dbDisciplines[dbTeacherDiscipline[test.teacherDisciplineId].disciplineId].name,
+                }
+
+                categoryData.tests.push(testData);
+            }
+
+            teacherData.categoriesData.push(categoryData);
+        }
+
+        formatedTeachersData.push(teacherData);
+    }
+
+    return formatedTeachersData;
+}
+
 export const testService = {
     create,
     getAllOrderByTerms,
+    getAllOrderByTeachers,
 }
