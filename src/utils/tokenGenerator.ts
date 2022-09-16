@@ -1,4 +1,4 @@
-import jwt, { decode } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { errorType } from "./errorTypes";
 
 const JWT_SECRETE: string = String(process.env.JWT_SECRET);

@@ -11,6 +11,13 @@ async function create(req: Request, res: Response) {
     res.sendStatus(201);
 }
 
+async function getAllOrderBYTerms(req: Request, res: Response) {
+    const dbTerms = await testService.getAllOrderByTerms();
+
+    res.status(200).send(dbTerms);
+}
+
 export const testController = {
     create,
+    getAllOrderBYTerms,
 }
