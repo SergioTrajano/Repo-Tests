@@ -12,12 +12,19 @@ async function create(req: Request, res: Response) {
 }
 
 async function getAllOrderBYTerms(req: Request, res: Response) {
-    const dbTerms = await testService.getAllOrderByTerms();
+    const tests = await testService.getAllOrderByTerms();
 
-    res.status(200).send(dbTerms);
+    res.status(200).send(tests);
+}
+
+async function getAllOrderByTeachers(req: Request, res: Response) {
+    const tests = await testService.getAllOrderByTeachers();
+
+    res.status(200).send(tests);
 }
 
 export const testController = {
     create,
     getAllOrderBYTerms,
+    getAllOrderByTeachers,
 }
