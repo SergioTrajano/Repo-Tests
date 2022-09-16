@@ -6,6 +6,13 @@ async function findById(id: number) {
     return dbTeacherDiscipline;
 }
 
+async function find() {
+    const dbTeacherDiscipline = await client.teacherDiscipline.findMany();
+
+    return dbTeacherDiscipline;
+}
+
 export const teacherDisciplineRepository = {
+    find,
     findById,
 }

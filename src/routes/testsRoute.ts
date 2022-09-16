@@ -9,5 +9,6 @@ const router = Router();
 
 router.use(validateHeader);
 router.post("/tests", validateSchema(createTestSchema), testController.create);
+router.get("/tests/terms", testController.getAllOrderBYTerms);
 
 export default router;

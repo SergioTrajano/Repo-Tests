@@ -7,6 +7,13 @@ async function findById(id: number) {
     return dbCategory;
 }
 
+async function find() {
+    const dbCategory = await client.categorie.findMany();
+
+    return dbCategory;
+}
+
 export const categoryRepository = {
+    find,
     findById,
 }
