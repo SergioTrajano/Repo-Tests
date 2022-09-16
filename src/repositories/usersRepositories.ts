@@ -22,7 +22,7 @@ async function findById(id: number) {
 }
 
 async function create(newUserData: IUser) {
-    await client.user.create({ data: newUserData });
+    return await client.user.create({ data: newUserData });
 }
 
 export const userRepository = {

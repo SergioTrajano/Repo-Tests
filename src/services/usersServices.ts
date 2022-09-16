@@ -11,10 +11,12 @@ async function signUp(newUserData: IUser) {
         throw errorType.conflict();
     }
 
-    await userRepository.create({
+    const createdUser = await userRepository.create({
         ...newUserData,
         password: encryptPassword(newUserData.password)
     });
+
+    return createdUser;
 }
 
 async function signIn(userData: IUser) {

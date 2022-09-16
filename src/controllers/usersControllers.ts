@@ -7,9 +7,9 @@ import { IUser } from "../repositories/usersRepositories"
 async function signUp(req: Request, res: Response) {
     const { email, password }: IUser = req.body;
 
-    await usersService.signUp({email, password});
+    const createdUser = await usersService.signUp({email, password});
 
-    res.sendStatus(201);
+    res.status(201).send(createdUser);
 }
 
 async function signIn(req: Request, res: Response) {
