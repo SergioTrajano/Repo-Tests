@@ -45,22 +45,24 @@ async function getAllOrderByTerms() {
             period: term.number,
             disciplinesData: [],
         };
-        const Discipline = [dbDisciplines[0]]
+
         for (let discipline of dbDisciplines) {
             if (discipline.termId === term.id) {
                 const disciplineData: any = {
                     disciplineName: discipline.name,
                 }
 
-                let teachersDisciplines = dbTeacherDiscipline.filter(c => c.disciplineId === discipline.id);
-                let disciplineTests = dbTests.filter(t =>  teachersDisciplines.some(tD => tD.id === t.teacherDisciplineId));
+                const teachersDisciplines = dbTeacherDiscipline.filter(c => c.disciplineId === discipline.id);
+                const disciplineTests = dbTests.filter(t =>  teachersDisciplines.some(tD => tD.id === t.teacherDisciplineId));
                 const termCategories = dbCategory.filter(c => disciplineTests.some(t => t.categoryId === c.id));
+                
                 disciplineData.categories = termCategories.map(c => {
                     const categoryData: ICategory= {
                         categoryName: c.name,
                         tests: [],
                     };
                     const testsTerm = disciplineTests.filter(t => termCategories.some(c => c.id === t.categoryId));
+                    
                     for (let test of testsTerm) {
                         const testData = {
                             name: test.name,
@@ -69,7 +71,9 @@ async function getAllOrderByTerms() {
                         };
                         const teacherId = teachersDisciplines.filter(t => t.id === test.teacherDisciplineId);
                         const teacherName = dbTeachers.filter(teacher => teacher.id === teacherId[0].teacherId);
+
                         testData.teacher = teacherName[0].name;
+
                         categoryData.tests.push(testData);
                     }
                     
@@ -81,7 +85,6 @@ async function getAllOrderByTerms() {
         }
 
         testsFormtatedByTerm.push(termData);
-
     }
 
     return testsFormtatedByTerm;
