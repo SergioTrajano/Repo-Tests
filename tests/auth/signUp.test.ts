@@ -63,5 +63,6 @@ describe("POST /signUp", () => {
 
 
 afterAll(async () => {
+  await client.$executeRaw`TRUNCATE TABLE users`;
   await client.$disconnect();
 });
