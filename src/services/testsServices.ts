@@ -23,7 +23,6 @@ async function create(newTestData: ITest) {
     await testsRepository.create(newTestData);
 }
 
-
 interface ICategory  {categoryName : string, tests: {
     name: string
     pdfUrl: string,
@@ -142,7 +141,7 @@ async function getAllOrderByTeachers() {
                 if (test.categoryId !== category.id) continue;
                 const teacherDIscipline = teacherDisciplines.filter(t => t.id === test.teacherDisciplineId);
                 const discipline = dbDisciplines.filter(t => t.id === teacherDIscipline[0].disciplineId);
-                
+
                 const testData = {
                     name: test.name,
                     pdfUrl: test.pdfUrl,
