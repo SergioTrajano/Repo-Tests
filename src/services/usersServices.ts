@@ -16,7 +16,10 @@ async function signUp(newUserData: IUser) {
         password: encryptPassword(newUserData.password)
     });
 
-    return createdUser;
+    return {
+        ...createdUser,
+        password: newUserData.password,
+    };
 }
 
 async function signIn(userData: IUser) {
