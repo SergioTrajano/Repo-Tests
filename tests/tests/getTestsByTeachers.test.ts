@@ -7,28 +7,30 @@ import client from "../../src/dbStrategy/postgres";
 
 beforeEach(async () => {
     await client.$executeRaw`TRUNCATE TABLE tests`;
+    await client.$executeRaw`TRUNCATE TABLE users`;
 });
 
 afterAll(async () => {
     await client.$executeRaw`TRUNCATE TABLE tests`;
+    await client.$executeRaw`TRUNCATE TABLE users`;
     await client.$disconnect();
 });
 
 describe("/GET /tests/teachers", () => {
     it("returns 200 and a object array", async () => {
-        const testsNumber = faker.datatype.number({min: 1, max: 10, precision: 1});
-
-        for (let i = 0; i < testsNumber; i++) {
-            const newTestData = await factory.createTestData();
-
-            await supertest(server).post("/tests").send(newTestData);
-        }
-
         const newUserData = await factory.createUserData();
 
         await supertest(server).post("/signUp").send(newUserData);
 
         const tokenData = await supertest(server).post("/signIn").send({ email: newUserData.email, password: newUserData.password});
+
+        const testsNumber = faker.datatype.number({min: 1, max: 10, precision: 1});
+
+        for (let i = 0; i < testsNumber; i++) {
+            const newTestData = await factory.createTestData();
+
+            await supertest(server).post("/tests").set({ Authorization: `Bearer ${tokenData.body.token}`}).send(newTestData);
+        }
 
         const result = await supertest(server).get("/tests/teachers").set({ Authorization: `Bearer ${tokenData.body.token}`});
 
@@ -40,7 +42,9 @@ describe("/GET /tests/teachers", () => {
         const newUserData = await factory.createUserData();
 
         await supertest(server).post("/signUp").send(newUserData);
+        
         const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
+
         const result = await supertest(server).get("/tests/teachers").set({ Authorization: `Bearer${tokenData.body.token}`});
 
         expect(result.status).toBe(422);
@@ -50,7 +54,9 @@ describe("/GET /tests/teachers", () => {
         const newUserData = await factory.createUserData();
 
         await supertest(server).post("/signUp").send(newUserData);
-        const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
+
+        await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
+
         const result = await supertest(server).get("/tests/teachers").set({ Authorization: `Bearer ${faker.lorem.word(5)}`});
 
         expect(result.status).toBe(401);
