@@ -2,52 +2,90 @@ import supertest from "supertest";
 
 import server from "../../src/index";
 import client from "../../src/dbStrategy/postgres";
+import { factory } from "../factory"
 
 beforeEach(async () => {
     await client.$executeRaw`TRUNCATE TABLE tests RESTART IDENTITY`;
 });
 
 describe("/POST /tests", () => {
-    const validCreateUser = {
-        email: "aluno1@driven.com",
-        password: "a1234",
-        confirmPassword: "a1234",
-    };
-    const validUserCredentials = {
-        email: "aluno1@driven.com",
-        password: "a1234",
-    };
-
     it("returns 201 for valid params", async () => {
-        const validCreateTest = {
-            name: "Teste 1",
-            pdfUrl: "https://www.africau.edu/images/default/sample.pdf",
-            categoryId: 2,
-            teacherDisciplineId: 1
-        }
+        const newUserData = await factory.createUserData();
+        const newTestData = await factory.createTestData();
 
-        await supertest(server).post("/signUp").send(validCreateUser);
-        const data = await supertest(server).post("/signIn").send(validUserCredentials);
+        await supertest(server).post("/signUp").send(newUserData);
+        const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
 
-        const result = await supertest(server).post("/tests").send(validCreateTest).set({ Authorization: `Bearer ${data.body.token}`});
+        const result = await supertest(server).post("/tests").send(newTestData).set({ Authorization: `Bearer ${tokenData.body.token}`});
 
         expect(result.status).toBe(201);
     });
 
     it("returns 404 for invalid categoryId", async () => {
-        const invalidCreateTestParams = {
-            name: "Teste 1",
-            pdfUrl: "https://www.africau.edu/images/default/sample.pdf",
-            categoryId: -1,
-            teacherDisciplineId: 2
-        }
+        const newUserData = await factory.createUserData();
+        const newTestData = await factory.createTestData();
 
-        await supertest(server).post("/signUp").send(validCreateUser);
-        const data = await supertest(server).post("/signIn").send(validUserCredentials);
+        newTestData.categoryId = -1;
 
-        const result = await supertest(server).post("/tests").send(invalidCreateTestParams).set({ Authorization: `Bearer ${data.body.token}`});
+        await supertest(server).post("/signUp").send(newUserData);
+        const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
+
+        const result = await supertest(server).post("/tests").send(newTestData).set({ Authorization: `Bearer ${tokenData.body.token}`});
 
         expect(result.status).toBe(404);
+    });
+
+    it("returns 404 for invalid teacherDisciplineId", async () => {
+        const newUserData = await factory.createUserData();
+        const newTestData = await factory.createTestData();
+
+        newTestData.teacherDisciplineId = -1;
+
+        await supertest(server).post("/signUp").send(newUserData);
+        const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
+
+        const result = await supertest(server).post("/tests").send(newTestData).set({ Authorization: `Bearer ${tokenData.body.token}`});
+
+        expect(result.status).toBe(404);
+    });
+
+    it("returns 422 for invalid newTest params", async () => {
+        const newUserData = await factory.createUserData();
+        const newTestData = {
+            name: "assacsa",
+            email: "sdcasnc@afdas.com"
+        }
+
+        await supertest(server).post("/signUp").send(newUserData);
+        const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
+
+        const result = await supertest(server).post("/tests").send(newTestData).set({ Authorization: `Bearer ${tokenData.body.token}`});
+
+        expect(result.status).toBe(422);
+    });
+
+    it("returns 422 for invalid header format", async () => {
+        const newUserData = await factory.createUserData();
+        const newTestData = await factory.createTestData();
+
+        await supertest(server).post("/signUp").send(newUserData);
+        const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
+
+        const result = await supertest(server).post("/tests").send(newTestData).set({ Authorization: `${tokenData.body.token}`});
+
+        expect(result.status).toBe(422);
+    });
+
+    it("returns 401 for invalid token", async () => {
+        const newUserData = await factory.createUserData();
+        const newTestData = await factory.createTestData();
+
+        await supertest(server).post("/signUp").send(newUserData);
+        const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
+
+        const result = await supertest(server).post("/tests").send(newTestData).set({ Authorization: `Bearer aaaaa${tokenData.body.token}`});
+
+        expect(result.status).toBe(401);
     });
 });
 
