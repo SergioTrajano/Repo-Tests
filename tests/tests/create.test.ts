@@ -5,7 +5,7 @@ import client from "../../src/dbStrategy/postgres";
 import { factory } from "../factory"
 
 beforeEach(async () => {
-    await client.$executeRaw`TRUNCATE TABLE tests RESTART IDENTITY`;
+    await client.$executeRaw`TRUNCATE TABLE tests`;
 });
 
 describe("/POST /tests", () => {
