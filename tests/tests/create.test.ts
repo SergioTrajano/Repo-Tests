@@ -6,6 +6,7 @@ import { factory } from "../factory"
 
 beforeEach(async () => {
     await client.$executeRaw`TRUNCATE TABLE tests`;
+    await client.$executeRaw`TRUNCATE TABLE users`;
 });
 
 describe("/POST /tests", () => {
@@ -16,7 +17,7 @@ describe("/POST /tests", () => {
         await supertest(server).post("/signUp").send(newUserData);
         const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
 
-        const result = await supertest(server).post("/tests").send(newTestData).set({ Authorization: `Bearer ${tokenData.body.token}`});
+        const result = await supertest(server).post("/tests").set({ Authorization: `Bearer ${tokenData.body.token}`}).send(newTestData);
 
         expect(result.status).toBe(201);
     });
@@ -30,7 +31,7 @@ describe("/POST /tests", () => {
         await supertest(server).post("/signUp").send(newUserData);
         const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
 
-        const result = await supertest(server).post("/tests").send(newTestData).set({ Authorization: `Bearer ${tokenData.body.token}`});
+        const result = await supertest(server).post("/tests").set({ Authorization: `Bearer ${tokenData.body.token}`}).send(newTestData);
 
         expect(result.status).toBe(404);
     });
@@ -44,7 +45,7 @@ describe("/POST /tests", () => {
         await supertest(server).post("/signUp").send(newUserData);
         const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
 
-        const result = await supertest(server).post("/tests").send(newTestData).set({ Authorization: `Bearer ${tokenData.body.token}`});
+        const result = await supertest(server).post("/tests").set({ Authorization: `Bearer ${tokenData.body.token}`}).send(newTestData);
 
         expect(result.status).toBe(404);
     });
@@ -59,7 +60,7 @@ describe("/POST /tests", () => {
         await supertest(server).post("/signUp").send(newUserData);
         const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
 
-        const result = await supertest(server).post("/tests").send(newTestData).set({ Authorization: `Bearer ${tokenData.body.token}`});
+        const result = await supertest(server).post("/tests").set({ Authorization: `Bearer ${tokenData.body.token}`}).send(newTestData);
 
         expect(result.status).toBe(422);
     });
@@ -71,7 +72,7 @@ describe("/POST /tests", () => {
         await supertest(server).post("/signUp").send(newUserData);
         const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
 
-        const result = await supertest(server).post("/tests").send(newTestData).set({ Authorization: `${tokenData.body.token}`});
+        const result = await supertest(server).post("/tests").set({ Authorization: `${tokenData.body.token}`}).send(newTestData);
 
         expect(result.status).toBe(422);
     });
@@ -83,7 +84,7 @@ describe("/POST /tests", () => {
         await supertest(server).post("/signUp").send(newUserData);
         const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});
 
-        const result = await supertest(server).post("/tests").send(newTestData).set({ Authorization: `Bearer aaaaa${tokenData.body.token}`});
+        const result = await supertest(server).post("/tests").set({ Authorization: `Bearer aaaaa${tokenData.body.token}`}).send(newTestData);
 
         expect(result.status).toBe(401);
     });
@@ -91,5 +92,6 @@ describe("/POST /tests", () => {
 
 afterAll(async () => {
     await client.$executeRaw`TRUNCATE TABLE tests`;
+    await client.$executeRaw`TRUNCATE TABLE users`;
     await client.$disconnect(); 
 });

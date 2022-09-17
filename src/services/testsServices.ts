@@ -140,10 +140,13 @@ async function getAllOrderByTeachers() {
 
             for (let test of teacherTests) {
                 if (test.categoryId !== category.id) continue;
+                const teacherDIscipline = teacherDisciplines.filter(t => t.id === test.teacherDisciplineId);
+                const discipline = dbDisciplines.filter(t => t.id === teacherDIscipline[0].disciplineId);
+                
                 const testData = {
                     name: test.name,
                     pdfUrl: test.pdfUrl,
-                    discipline: dbDisciplines[dbTeacherDiscipline[test.teacherDisciplineId].disciplineId].name,
+                    discipline: discipline[0].name,
                 }
 
                 categoryData.tests.push(testData);

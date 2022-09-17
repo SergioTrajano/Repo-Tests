@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "nodemon ./src/server.ts",
-    "test": "dotenv -e .env.dbtests npx prisma migrate dev && dotenv -e .env.dbtests npx prisma db seed && dotenv -e .env.dbtests jest --no--cache -i"
+    "test": "npx prisma migrate dev && npx prisma db seed && jest --no--cache -i"
   },
   "keywords": [],
   "author": "",
