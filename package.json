@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/app.js",
+    "start": "node dist/src/app.js",
     "dev": "nodemon ./src/app.ts",
     "test": "npx prisma migrate dev && npx prisma db seed && jest --no--cache -i"
   },
