@@ -36,11 +36,11 @@ describe("/POST /tests", () => {
         expect(result.status).toBe(404);
     });
 
-    it("returns 404 for invalid teacherDisciplineId", async () => {
+    it("returns 404 for invalid teacher and discipline relation", async () => {
         const newUserData = await factory.createUserData();
         const newTestData = await factory.createTestData();
 
-        newTestData.teacherDisciplineId = -1;
+        newTestData.disciplineId = -1;
 
         await supertest(server).post("/signUp").send(newUserData);
         const tokenData = await supertest(server).post("/signIn").send({email: newUserData.email, password: newUserData.password});

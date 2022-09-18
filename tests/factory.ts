@@ -13,11 +13,15 @@ async function createUserData() {
 }
 
 async function createTestData() {
+    const teacherId = faker.datatype.number({ min: 1, max: 2, precision: 1});
+    const disciplineId = teacherId === 1 ? faker.datatype.number({ min: 1, max: 3, precision: 1}) : faker.datatype.number({ min: 4, max: 6, precision: 1});
+    
     const newTestData = {
         name: faker.word.noun(),
         pdfUrl: faker.internet.url() + ".pdf", // fake convertion of the generated url to pdf 
         categoryId: faker.datatype.number({ min: 1, max: 3, precision: 1}),
-        teacherDisciplineId: faker.datatype.number({ min: 1, max: 6, precision: 1}),
+        teacherId,
+        disciplineId,
     };
 
     return newTestData;

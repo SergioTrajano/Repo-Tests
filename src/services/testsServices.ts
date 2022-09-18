@@ -7,20 +7,23 @@ import { disciplineRespository } from "../repositories/disciplinesRepository";
 import { teacherRepository } from "../repositories/teachersRepository";
 
 
-async function create(newTestData: ITest) {
+async function create(newTestData: any) {
     const dbCategory = await categoryRepository.findById(newTestData.categoryId);
+    const dbTeacherDisciplineId = await teacherDisciplineRepository.findByTeacherAndDiscipline(newTestData.teacherId, newTestData.disciplineId);
 
     if (!dbCategory) {
         throw errorType.notFound("CategoryId");
     }
-
-    const dbTeacherDiscipline = await teacherDisciplineRepository.findById(newTestData.teacherDisciplineId);
-
-    if (!dbTeacherDiscipline) {
-        throw errorType.notFound("teacherDisciplineId");
+    if (!dbTeacherDisciplineId) {
+        throw errorType.notFound("Teacher and discipline relation");
     }
 
-    await testsRepository.create(newTestData);
+    await testsRepository.create({
+        name: newTestData.name,
+        pdfUrl: newTestData.pdfUrl,
+        categoryId: newTestData.categoryId,
+        teacherDisciplineId: dbTeacherDisciplineId,
+    });
 }
 
 interface ICategory  {categoryName : string, tests: {
