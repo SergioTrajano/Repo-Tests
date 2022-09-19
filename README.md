@@ -6,7 +6,7 @@
 
 <p align = "center">
    <img src="https://img.shields.io/badge/author-Sergio_Trajano-4dae71?style=flat-square" />
-   <img src="https://img.shields.io/github/languages/count/https://github.com/SergioTrajano/Repo-Tests-API?color=4dae71&style=flat-square" />
+   <img src="https://img.shields.io/github/languages/count/SergioTrajano/Repo-Tests-API?color=4dae71&style=flat-square" />
 </p>
 
 
