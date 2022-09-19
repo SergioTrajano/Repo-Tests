@@ -38,7 +38,7 @@ POST /signUp
         "email": "Lorem ipsum",
         "password": "loremipsum",
         "confirmPassword": "loremipsum"
-}
+      }
 ```
     
 ```yml 
@@ -49,6 +49,19 @@ POST /signIn
     "email": "lorem@gmail.com",
     "password": "loremipsum"
     }
+```
+
+```yml 
+POST /tests (autenticada)
+    - Rota cadastrar um teste
+    - headers: { "Authorization": "Bearer $token" }
+    - body: {
+         name: "loremipsum",
+         pdfUrl: "https://www.loremipsum.pdf",
+         categoryId: 1,
+         teacherId: 1,
+         disciplineId: 1
+      }
 ```
     
 ```yml 
